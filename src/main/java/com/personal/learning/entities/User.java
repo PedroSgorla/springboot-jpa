@@ -1,6 +1,7 @@
 package com.personal.learning.entities;
 
 import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+/**
+ * Entidade que representa um usuário/cliente 
+ * <p>
+ * Mapeado para a tabela {@code tb_user} via JPA. Implemnta {@link Serializable}
+ * porque instãncias de entidades JPA podem trafegar entre camadas e precisam ser serializadas.
+ */
 @Entity
 @Table(name = "tb_user")
 public class User implements Serializable{
@@ -22,11 +29,20 @@ public class User implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
 	private String name;
 	private String email;
 	private String phone;
 	private String password;
 	
+	/**
+	 * Lista de pedidos feitos por esse usuário
+	 * <p>
+	 * {@code mappedBy = "client"} indica quem é o lado dominante ou dono no relacionament, no caso 
+	 * é o campo {@code client} na classe {@link Order}.
+	 * {@link JsonIgnore} evita loop nas chamadas da serialização: User -> Order -> User ... 
+	 * 
+	 */
 	@JsonIgnore
 	@OneToMany(mappedBy = "client")
 	private List<Order> orders = new ArrayList<>();
@@ -84,7 +100,9 @@ public class User implements Serializable{
 		this.password = password;
 	}
 	
-	
+	/**
+	 * Nao ha um setOrders pois essa associação é controlada pela classe {@link Order} 
+	 */
 	public List<Order> getOrders() {
 		return orders;
 	}
