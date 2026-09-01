@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import com.personal.learning.entities.Category;
 import com.personal.learning.entities.Order;
 import com.personal.learning.entities.OrderItem;
+import com.personal.learning.entities.Payment;
 import com.personal.learning.entities.Product;
 import com.personal.learning.entities.User;
 import com.personal.learning.entities.enums.OrderStatus;
@@ -68,8 +69,8 @@ public class TestConfig implements CommandLineRunner{
 		User u2 = new User(null, "Alex Green", "alex@gmail.com", "977777777", "123456");
 		
 		Order o1 = new Order(null, Instant.parse("2026-06-20T19:53:07Z"), OrderStatus.PAID, u1);
-		Order o2 = new Order(null, Instant.parse("2026-06-20T19:42:07Z"), OrderStatus.PAID, u2);
-		Order o3 = new Order(null, Instant.parse("2026-06-20T19:30:07Z"), OrderStatus.PAID, u1);
+		Order o2 = new Order(null, Instant.parse("2026-06-20T19:42:07Z"), OrderStatus.WAITING_PAYMENT, u2);
+		Order o3 = new Order(null, Instant.parse("2026-06-20T19:30:07Z"), OrderStatus.WAITING_PAYMENT, u1);
 		
 		userRepository.saveAll(Arrays.asList(u1,u2));
 		orderRepository.saveAll(Arrays.asList(o1,o2,o3));
@@ -81,8 +82,10 @@ public class TestConfig implements CommandLineRunner{
 		
 		orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3, oi4));
 		
+		Payment pay1 = new Payment(null, Instant.parse("2026-06-20T21:53:07Z"), o1);
+		o1.setPayment(pay1);
 		
-		
+		orderRepository.save(o1);
 	}
 	
 	
